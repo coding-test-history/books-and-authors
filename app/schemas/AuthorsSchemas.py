@@ -14,3 +14,8 @@ class AuthorResponse(AuthorBase):
 
     class Config:
         from_attributes = True
+
+class StandardResponse(BaseModel):
+    status: int
+    message: str
+    data: AuthorResponse | None = None
