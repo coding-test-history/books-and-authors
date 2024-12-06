@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from config.app import settings
+from urllib.parse import quote_plus
 
 # env value database
 dbConnection = settings.DB_CONNECTION
@@ -16,7 +17,7 @@ def get_database_url():
     if dbConnection == "sqlite":
         return f"sqlite:///./{dbName}.db"
     elif dbConnection == "mysql":
-        return f"mysql+pymysql://{dbUsername}:{dbPassword}@{dbHost}:{dbPort}/{dbName}"
+        return f"mysql+pymysql://{dbUsername}:{quote_plus(dbPassword)}@{dbHost}:{dbPort}/{dbName}"
     elif dbConnection == "postgresql": 
         return f"postgresql://{dbUsername}:{dbPassword}@{dbHost}:{dbPort}/{dbName}"
     else:

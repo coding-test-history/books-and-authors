@@ -5,7 +5,7 @@ class UsersModel(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    username = Column(String, nullable=False)
+    name = Column(String(225), nullable=False)
+    email = Column(Text, nullable=False)
+    username = Column(String(225), nullable=False)
     password = Column(Text, nullable=False)
