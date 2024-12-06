@@ -7,6 +7,7 @@ from app.services.AuthorsServices import (
     createAuthorService,
     updateAuthorService,
     deleteAuthorService,
+    retrieveBooksByAuthor,
 )
 from app.schemas.AuthorsSchemas import AuthorCreate, AuthorResponse
 
@@ -64,3 +65,11 @@ def deleteAuthorController(id: int, db: Session):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An error occurred: {str(e)}",
         )
+
+
+# Retrieve all books by a specific author.
+async def fetchBooksByAuthor(author_id: int, db: Session):
+    """
+    Controller to handle fetching books by author ID.
+    """
+    return await retrieveBooksByAuthor(author_id=author_id, db=db)

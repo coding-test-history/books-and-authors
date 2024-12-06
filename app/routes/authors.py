@@ -9,6 +9,7 @@ from app.controllers.AuthorsController import (
     createAuthorController,
     updateAuthorController,
     deleteAuthorController,
+    fetchBooksByAuthor
 )
 
 
@@ -58,3 +59,11 @@ async def updateAuthorRoute(
 def deleteAuthor(id: int, db: Session = Depends(get_db)):
     """Delete an author by ID."""
     return deleteAuthorController(id, db)
+
+# Retrieve all books by a specific author.
+@router.get("/{id}/books", summary="Retrieve all books by a specific author")
+async def getBooksByAuthor(id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to retrieve all books by a specific author.
+    """
+    return await fetchBooksByAuthor(author_id=id, db=db)

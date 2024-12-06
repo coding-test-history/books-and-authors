@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.AuthorsModel import AuthorsModel
+from app.models.BooksModel import BooksModel
 from fastapi import HTTPException, status
 from app.schemas.AuthorsSchemas import AuthorCreate, AuthorResponse
+from app.schemas.BooksSchemas import BookResponse
 
 
 # get all author
@@ -28,8 +30,12 @@ async def fetchAuthorById(author_id: int, db: Session):
                 status_code=status.HTTP_404_NOT_FOUND, detail="Author not found"
             )
         # Convert SQLAlchemy object to Pydantic model
-        
-        return {"status": status.HTTP_200_OK, "message": "OK", "data": AuthorResponse.from_orm(authorData)}
+
+        return {
+            "status": status.HTTP_200_OK,
+            "message": "OK",
+            "data": AuthorResponse.from_orm(authorData),
+        }
     except SQLAlchemyError as e:
         # Log error if a logging mechanism is implemented
         raise Exception("Failed to fetch author from the database.")
@@ -83,3 +89,26 @@ def deleteAuthorService(id: int, db: Session) -> bool:
         # Log error if needed
         print(f"Error deleting author: {str(e)}")
         raise e
+
+
+# Retrieve all books by a specific author.
+async def retrieveBooksByAuthor(author_id: int, db: Session):
+    """
+    Service to retrieve all books by a specific author from the database.
+    """
+    try:
+        books = db.query(BooksModel).filter(BooksModel.author_id == author_id).all()
+        booksResponse = [BookResponse.from_orm(book) for book in books]
+        if not books:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No books found for the specified author.",
+            )
+        return {
+            "status": status.HTTP_200_OK,
+            "message": "Books retrieved successfully.",
+            "data": booksResponse,
+        }
+    except SQLAlchemyError:
+        # Log error if necessary
+        raise Exception("Failed to fetch books by author from the database.")
