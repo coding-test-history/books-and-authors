@@ -106,7 +106,7 @@ async def retrieveBooksByAuthor(author_id: int, db: Session):
     """
     try:
         books = db.query(BooksModel).filter(BooksModel.author_id == author_id).all()
-        booksResponse = [BookResponse.from_orm(book) for book in books]
+        booksResponse = [BookResponse.model_validate(book) for book in books]
         if not books:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
