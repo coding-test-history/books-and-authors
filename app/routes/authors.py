@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from config.dependencies import get_db
-from app.models.AuthorsModel import AuthorsModel
-from app.schemas.AuthorsSchemas import AuthorCreate, AuthorResponse, StandardResponse
+from app.schemas.AuthorsSchemas import AuthorCreate, StandardResponse
 from app.controllers.AuthorsController import (
     getAllAuthors,
     getAuthorByIdController,

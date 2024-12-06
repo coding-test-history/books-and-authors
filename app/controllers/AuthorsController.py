@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from app.schemas.AuthorsSchemas import AuthorResponse
 from app.services.AuthorsServices import (
     fetchAllAuthors,
     fetchAuthorById,
@@ -36,10 +35,10 @@ async def createAuthorController(author: AuthorCreate, db: Session) -> AuthorRes
 
 # Update data
 async def updateAuthorController(
-    id: int, updated_author: AuthorCreate, db: Session
+    id: int, updatedBook: AuthorCreate, db: Session
 ) -> AuthorResponse:
     """Controller to handle author update."""
-    author = await updateAuthorService(id, updated_author, db)
+    author = await updateAuthorService(id, updatedBook, db)
     if not author:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
