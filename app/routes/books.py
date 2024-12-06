@@ -21,7 +21,7 @@ async def getBooksRoute(db=Depends(get_db)):
 
 
 # Retrieve details of a specific book.
-@router.get("/{id}", response_model=StandardResponse, summary="Retrieve book by ID")
+@router.get("/{id}", response_model=StandardResponse[BookResponse], summary="Retrieve book by ID")
 async def getBookByIdRoute(id: int, db: Session = Depends(get_db)):
     """Route to retrieve book by ID."""
     return await getBookByIdController(id, db)
@@ -30,7 +30,7 @@ async def getBookByIdRoute(id: int, db: Session = Depends(get_db)):
 # Create a new book.
 @router.post(
     "/store",
-    response_model=StandardResponse,
+    response_model=StandardResponse[BookResponse],
     status_code=status.HTTP_201_CREATED,
     summary="Create a new book",
 )
@@ -41,7 +41,7 @@ async def createBookRoute(book: BookCreate, db: Session = Depends(get_db)):
 
 # Update an existing book.
 @router.put(
-    "/update/{id}", response_model=StandardResponse, summary="Update an existing book"
+    "/update/{id}", response_model=StandardResponse[BookResponse], summary="Update an existing book"
 )
 async def updateBookRoute(
     id: int, updatedBook: BookCreate, db: Session = Depends(get_db)

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from config.dependencies import get_db
-from app.schemas.AuthorsSchemas import AuthorCreate, StandardResponse
+from app.schemas.AuthorsSchemas import AuthorCreate, StandardResponse, AuthorResponse
 from app.controllers.AuthorsController import (
     getAllAuthors,
     getAuthorByIdController,
@@ -22,7 +22,7 @@ async def getAuthorsRoute(db=Depends(get_db)):
 
 
 # get author by id
-@router.get("/{id}", response_model=StandardResponse, summary="Retrieve author by ID")
+@router.get("/{id}", response_model=StandardResponse[AuthorResponse], summary="Retrieve author by ID")
 async def getAuthorByIdRoute(id: int, db: Session = Depends(get_db)):
     """Route to retrieve author by ID."""
     return await getAuthorByIdController(id, db)
@@ -31,7 +31,7 @@ async def getAuthorByIdRoute(id: int, db: Session = Depends(get_db)):
 # Store data
 @router.post(
     "/store",
-    response_model=StandardResponse,
+    response_model=StandardResponse[AuthorResponse],
     status_code=status.HTTP_201_CREATED,
     summary="Create a new author",
 )
@@ -42,7 +42,7 @@ async def createAuthorRoute(author: AuthorCreate, db: Session = Depends(get_db))
 
 # Update data
 @router.put(
-    "/update/{id}", response_model=StandardResponse, summary="Update an existing author"
+    "/update/{id}", response_model=StandardResponse[AuthorResponse], summary="Update an existing author"
 )
 async def updateAuthorRoute(
     id: int, updated_author: AuthorCreate, db: Session = Depends(get_db)

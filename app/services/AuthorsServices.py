@@ -34,7 +34,7 @@ async def fetchAuthorById(author_id: int, db: Session):
         return {
             "status": status.HTTP_200_OK,
             "message": "OK",
-            "data": AuthorResponse.from_orm(authorData),
+            "data": AuthorResponse.model_validate(authorData),
         }
     except SQLAlchemyError as e:
         # Log error if a logging mechanism is implemented
@@ -53,7 +53,11 @@ async def createAuthorService(author: AuthorCreate, db: Session):
         db.add(db_author)
         db.commit()
         db.refresh(db_author)
-        return {"status": status.HTTP_201_CREATED, "message": "Created"}
+        return {
+            "status": status.HTTP_201_CREATED,
+            "message": "Created",
+            "data": AuthorResponse.model_validate(db_author),
+        }
     except SQLAlchemyError as e:
         raise Exception("Failed to create a new author.")
 
@@ -70,7 +74,11 @@ async def updateAuthorService(id: int, updatedAuthor: AuthorCreate, db: Session)
         author.birth_date = updatedAuthor.birth_date
         db.commit()
         db.refresh(author)
-        return {"status": status.HTTP_200_OK, "message": "OK"}
+        return {
+            "status": status.HTTP_200_OK,
+            "message": "OK",
+            "data": AuthorResponse.model_validate(author),
+        }
     except SQLAlchemyError as e:
         raise Exception("Failed to update the author.")
 

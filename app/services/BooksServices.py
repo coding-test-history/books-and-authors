@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.BooksModel import BooksModel
+from app.models.AuthorsModel import AuthorsModel
 from fastapi import HTTPException, status
 from app.schemas.BooksSchemas import BookResponse, BookCreate
 
@@ -32,7 +33,7 @@ async def fetchBookById(book_id: int, db: Session):
         return {
             "status": status.HTTP_200_OK,
             "message": "OK",
-            "data": BookResponse.from_orm(booksData),
+            "data": BookResponse.model_validate(booksData),
         }
     except SQLAlchemyError as e:
         # Log error if a logging mechanism is implemented
@@ -43,6 +44,15 @@ async def fetchBookById(book_id: int, db: Session):
 async def createBookService(book: BookCreate, db: Session):
     """Service to create a new book in the database."""
     try:
+        # Check if author exists
+        author = db.query(AuthorsModel).filter(AuthorsModel.id == book.author_id).first()
+        if not author:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Author with ID {book.author_id} does not exist.",
+            )
+        
+        # insert book to db    
         db_book = BooksModel(
             title=book.title,
             description=book.description,
@@ -52,7 +62,11 @@ async def createBookService(book: BookCreate, db: Session):
         db.add(db_book)
         db.commit()
         db.refresh(db_book)
-        return {"status": status.HTTP_201_CREATED, "message": "Created"}
+        return {
+            "status": status.HTTP_201_CREATED,
+            "message": "Created",
+            "data": BookResponse.model_validate(db_book),
+        }
     except SQLAlchemyError as e:
         raise Exception("Failed to create a new book.")
 
@@ -70,7 +84,11 @@ async def updateBookService(id: int, updatedBook: BookCreate, db: Session):
         book.author_id = updatedBook.author_id
         db.commit()
         db.refresh(book)
-        return {"status": status.HTTP_200_OK, "message": "OK"}
+        return {
+            "status": status.HTTP_200_OK,
+            "message": "OK",
+            "data": BookResponse.model_validate(book),
+        }
     except SQLAlchemyError as e:
         raise Exception("Failed to update the book.")
 

@@ -1,21 +1,28 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date
+from typing import Generic, TypeVar
 
+# Base schema for Author
 class AuthorBase(BaseModel):
     name: str
-    bio: str | None = None
-    birth_date: date | None = None
+    bio: str
+    birth_date: date
 
+# Schema for creating an Author
 class AuthorCreate(AuthorBase):
     pass
 
+# Schema for returning an Author
 class AuthorResponse(AuthorBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    # Configuration for compatibility with ORM models
+    model_config = ConfigDict(from_attributes=True)
 
-class StandardResponse(BaseModel):
+# Generic StandardResponse schema
+T = TypeVar("T")  # Generic type variable
+
+class StandardResponse(BaseModel, Generic[T]):  # Note: BaseModel comes first
     status: int
     message: str
-    data: AuthorResponse | None = None
+    data: T | None = None
