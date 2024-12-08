@@ -1,80 +1,162 @@
-
 ## Tech Stack
 
-**Server:** FastAPI |  Python 3, MySQL | PostgreSQL | SQlite, sqlalchemy, alembic
+**Language:** Python 3
+
+**Framework:** FastAPI
+
+**Database:** MySQL | PostgreSQL | SQlite
+
 ## Features
 
- - Login
- - User Registration
- - Logout
- - User Management including (User, Role, Dynamic Nested Menu, Permission)
- - Audit Trail including (ID user, Username, Menu Activity, Method Activity, Time Activity, Create detail layout for add and update activity)
-## Installation
-<!-- install composer
-```bash
-  composer install
-```
-db config on env    
-```bash
-  DB_HOST="" 
-  DB_PORT= #3306 for mysql, 5432 for PostgreSQL
-  DB_DATABASE=""
-  DB_USERNAME=""
-  DB_PASSWORD=""
-  DB_CONNECTION= #input mysql for mysql and input pgsql for PostgreSQL
-```
-input your jwt secret key
-```bash
-  JWT_SECRET_KEY= 
-``` -->
-## Account
+ - Authors
+ - Books
+ - Associations
 
-- Username : user1 / user2 / user3
-- Password : password
+## Installation
+copy file .env.exmaple and rename it to .env and config your database    
+```bash
+  DB_CONNECTION=
+  DB_HOST=
+  DB_PORT=
+  DB_DATABASE=
+  DB_USERNAME=
+  DB_PASSWORD=
+```
+install dependencies
+```bash
+  pip install -r requirements.txt
+```
+create migration. once you run it, it will create all tables, so you don't have to run one by one
+```bash
+  alembic revision --autogenerate -m "create table"
+```
+run migration
+```bash
+  alembic upgrade head
+```
+
+## Run Locally
+
+Start the server
+
+```bash
+  uvicorn main:app --reload
+```
+or
+```bash
+  python main.py
+```
+when you start the server, it will run the seeder automatically
+
+## Running Tests
+
+To run tests, run the following command
+
+```bash
+  pytest
+```
 
 ## API Reference
-<!-- 
-#### Login
+
+### Authors
+Retrieve a list of all authors.
 ```http
-  POST /api/auth/login
+  GET /authors
+```
+Retrieve details of a specific author.
+```http
+  GET /authors/{id}
 ```
 
-#### Get customer list
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
+
+Create a new author.
 ```http
-  GET /api/customer/data
+  POST /authors
 ```
 
-#### Get customer detail
-```http
-  GET /api/customer/get/{id}
-```
+| Request Body| Type     | Description  |
+| :--------   | :------- | :------------|
+| `name`      | `string` | **Required**.|
+| `bio`       | `string` | **Required**.|
+| `birth_date`| `date`   | **Required**.|
 
-#### Update customer data
+Update an existing author.
 ```http
-  PUT /api/customer/update/{id}
+  PUT /authors/{id}
 ```
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
 
-#### Delete customer data
-```http
-  DELETE /api/customer/delete/{id}
-```
+| Request Body| Type     | Description  |
+| :--------   | :------- | :------------|
+| `name`      | `string` | **Required**.|
+| `bio`       | `string` | **Required**.|
+| `birth_date`| `date`   | **Required**.|
 
-#### Get order list
+Delete an author.
 ```http
-  GET /api/order/data
+  DELETE/authors/{id}
 ```
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
 
-#### Get detail order
+### Books
+Retrieve a list of all books.
 ```http
-  GET /api/order/get/{id}
+  GET /books
 ```
+Retrieve details of a specific book.
+```http
+  GET /books/{id}
+```
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
 
-#### Update order data
+Create a new book.
 ```http
-  PUT /api/order/update/{id}
+  POST /books
 ```
+| Request Body. | Type     | Description  |
+| :--------     | :------- | :------------|
+| `title`       | `string` | **Required**.|
+| `description` | `string` | **Required**.|
+| `publish_date`| `date`   | **Required**.|
+| `author_id`.  | `int`    | **Required**.|
 
-#### Delete order data
+Update an existing book.
 ```http
-  DELETE /api/order/delete/{id}
+  PUT /books/{id}
 ```
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
+
+| Request Body. | Type     | Description  |
+| :--------     | :------- | :------------|
+| `title`       | `string` | **Required**.|
+| `description` | `string` | **Required**.|
+| `publish_date`| `date`   | **Required**.|
+| `author_id`.  | `int`    | **Required**.|
+
+Delete a book.
+```http
+  DELETE/books/{id}
+```
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
+
+### Associations
+Retrieve all books by a specific
+```http
+  GET /authors/{id}/books
+```
+| Parameter | Type     | Description. |
+| :-------- | :------- | :------------|
+| `id`      | `int`    | **Required**.|
