@@ -12,6 +12,7 @@
  - Books
  - Associations
 
+
 ## Installation
 copy file .env.exmaple and rename it to .env and config your database    
 ```bash
@@ -22,10 +23,36 @@ copy file .env.exmaple and rename it to .env and config your database
   DB_USERNAME=
   DB_PASSWORD=
 ```
-install dependencies
+install dependencies using requirements.txt
 ```bash
   pip install -r requirements.txt
 ```
+or you can install manually all at once
+```bash
+  pip install fastapi uvicorn sqlalchemy psycopg2 pymysql pydantic pydantic-settings  psycopg2-binary pydantic_core alembic httpx pytest pytest-asyncio pytest-cov python-dotenv passlib cryptography bcrypt
+```
+or you can install manually one by one
+```bash
+  pip install fastapi 
+  pip install uvicorn 
+  pip install sqlalchemy 
+  pip install psycopg2 
+  pip install pymysql 
+  pip install pydantic 
+  pip install pydantic-settings  
+  pip install psycopg2-binary 
+  pip install pydantic_core 
+  pip install alembic 
+  pip install httpx 
+  pip install pytest 
+  pip install pytest-asyncio 
+  pip install pytest-cov 
+  pip install python-dotenv 
+  pip install passlib 
+  pip install cryptography 
+  pip install bcrypt
+```
+
 create migration. once you run it, it will create all tables, so you don't have to run one by one
 ```bash
   alembic revision --autogenerate -m "create table"
